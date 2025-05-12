@@ -524,7 +524,7 @@ login.sh:
 - Record log in cloud_log.txt with log function
 - If login success, system run the crontab
 
-Kode:
+#### Code:
 ```sh
 #!/bin/bash
 
@@ -588,7 +588,7 @@ case $option in
 esac
 done
 ```
-##### Hasil:
+##### Result:
 ![WhatsApp Image 2025-03-26 at 18 25 12](https://github.com/user-attachments/assets/f3e2b0f1-7f2b-446e-b123-994bb9fa4ec7)
 
 ![WhatsApp Image 2025-03-26 at 18 27 37](https://github.com/user-attachments/assets/5795d557-13a5-46f0-9f01-48ea3ea65415)
@@ -599,13 +599,11 @@ done
 ##### b.
 automation.sh:
 
-Memeriksa apakah ada pengguna yang login dengan cara membandingkan waktu login terakhir di cloud_log.txt dengan waktu logout terakhir di cloud_log.txt
-
-Jika ada pengguna aktif, biarkan crontab menyala
-
-Jika pengguna logout, hentikan crontab
-
-Kode:
+- Check if there is a user still login by compare last login time and last logout time in cloud_log.txt
+- If there is an active user, let the crontabe run
+- If the user logout, stop the crontab
+  
+#### Code:
 ```sh
 #!/bin/bash
 
@@ -625,16 +623,12 @@ fi
 
 #### download.sh:
 
-Membuat direktori penyimpanan jika belum ada
+- Make new directory if it doesnt exist
+- Download random nature images from 15 choices
+- Save the picture in /home/$user/cloud_storage/downloads/{USERNAME}/ with format HH-MM_DD-MM-YYYY.{ext} (example: 14-20_12-03-2025.jpg)
+- Run automaticly every 10 minutes using crontab
 
-Mengunduh gambar alam secara acak dari 15 pilihan
-
-Menyimpan gambar di /home/$user/cloud_storage/downloads/{USERNAME}/ dengan format nama:
-HH-MM_DD-MM-YYYY.{ext} (contoh: 14-20_12-03-2025.jpg)
-
-Berjalan otomatis setiap 10 menit menggunakan crontab
-
-#### Kode:
+#### Code:
 ```sh
 #!/bin/bash
 
@@ -667,11 +661,9 @@ wget -q -O "$filename" "$random_image"
 
 #### crontab:
 
-Menjalankan automation.sh setiap 2 menit
-
-Menjalankan donwload.sh setiap 10 menit
-
-Menjalankan archive.sh setiap 2 jam
+- Run automation.sh every 2 minutes
+- Run download.sh every 10 minutes
+- Run archive.sh every 2 hours
 
 #### Kode:
 ```sh
@@ -679,18 +671,14 @@ Menjalankan archive.sh setiap 2 jam
 */10 * * * * /home/$USER/cloud_storage/download.sh 
 0 */2 * * * /home/$USER/cloud_storage/archive.sh
 ```
-##### Hasil:
+##### Result:
 ![WhatsApp Image 2025-03-27 at 12 23 33](https://github.com/user-attachments/assets/1bcec934-a29a-466c-ae33-10f6a2219a80)
 
 ##### c.
 archive.sh:
 
-Dijalankan otomatis setiap 2 jam dengan crontab
-
-Mengarsipkan semua gambar di folder /home/$user/cloud_storage/downloads/{USERNAME}/ ke ZIP di:
-/home/$user/cloud_storage/archives/{USERNAME}/archive_HH-DD-MM-YYYY.zip
-
-Menghapus semua file di folder  /home/$user/cloud_storage/downloads/{USERNAME} setelah di-zip
+- Archive all images in /home/$user/cloud_storage/downloads/{USERNAME}/ to ZIP file in /home/$user/cloud_storage/archives/{USERNAME}/archive_HH-DD-MM-YYYY.zip
+- Delete all file in /home/$user/cloud_storage/downloads/{USERNAME} after zipped
 
 Kode:
 ```sh
@@ -715,13 +703,13 @@ fi
 
 #### minute5_log.sh
 
-#### Cara Pengerjaan
+#### Procedure:
 
-- Membuat file script yang berjalan tiap 5 menit untuk membuat file log yang bernama metrics_{YmdHms}.log
-- File log berisi total penggunaan RAM pada saat script itu dijalankan.
-- File log tersebut dimasukkan ke dalam folder metrics dan hanya dapat diakses oleh admin
+1. Create a script file that runs every 5 minutes to create a log file called metrics_{YmdHms}.log
+2. The log file contains the total RAM usage at the time the script was running.
+3. The log file is put into the metrics folder and can only be accessed by admins.
 
-#### Kode
+#### Code
 ```sh
 #!/bin/bash
 
@@ -735,20 +723,20 @@ chmod 200 "$file_name"
 mv "$file_name" "/home/$USER/metrics"
 ```
 
-#### Hasil
+#### Result
 
 ![min5](https://github.com/user-attachments/assets/1a184cc6-9d7c-4707-bf05-5165cf777da1)
 
 #### agg_5min_to_hour.sh
 
-#### Cara Pengerjaan
+#### Procedure
 
-- Membuat file script yang berjalan setiap 1 jam untuk membuat file log yang bernama metrics_agg_{YmdH}.log.
-- File log berisi nilai minimum, maksimum, dan rata-rata penggunaan RAM.
-- Nilai minimim, maksimum, dan rata-rata penggunaan ram diambil dari file metrics yang telah dibuat dalam satu jam sebelum script ini dijalankan
-- File log tersebut dimasukkan ke dalam folder metrics dan hanya dapat diakses oleh admin.
+1. Create a script file that runs every 1 hour to create a log file called metrics_agg_{YmdH}.log.
+2. The log file contains the minimum, maximum, and average values of RAM usage.
+3. The minimum, maximum, and average RAM usage values are taken from the metrics file that was created one hour before this script was running.
+4. The log file is put into the metrics folder and can only be accessed by admins.
 
-#### Kode
+#### Code
 ```sh
 #!/bin/bash
 
@@ -860,13 +848,13 @@ mv "$file_name" "/home/$USER/metrics"
 
 ```
 
-#### Hasil
+#### Result
 
 ![agg](https://github.com/user-attachments/assets/57bc1d6f-3a99-48f8-8dc1-6c48856f37e8)
 
-#### Kendala Pengerjaan
+#### Constraint
 
-- Pada output rata-rata, angka yang memiliki nilai desimal di belakang kome sama dengan nol harus dioutputkan sebagai bilangan bulat yang terkadang menyebabkan kesulitan dan harus menggunakan perintah seperti berikut
+- In the average output, numbers that have a trailing decimal value equal to zero must be output as an integer which sometimes causes difficulties and must use commands such as the following
 ```sh
   if [[ $(echo "$average" | grep -E "\.0+$") ]]; then
        printf "%d," "${average%.*}" >> "$file_name"
@@ -877,13 +865,14 @@ mv "$file_name" "/home/$USER/metrics"
 
 #### uptime_monitor.sh
 
-#### Cara Pengerjaan
+#### Procedure
 
-- Membuat file script yang berjalan setiap 1 jam untuk membuat file log yang bernama uptime_{YmdH}.log
-- File log berisi total uptime dan load average server.
-- File log tersebut dimasukkan ke dalam folder metrics dan hanya dapat diakses oleh admin
+1. Create a script file that runs every 1 hour to create a log file called uptime_{YmdH}.log
+2. The log file contains the total uptime and load average of the server.
+3. The log file is put into the metrics folder and can only be accessed by admins.
 
-#### Kode
+#### Code
+
 ```sh
 #!/bin/bash
 
@@ -896,37 +885,38 @@ chmod 200 "$file_name"
 mv "$file_name" "/home/$USER/metrics"
 ```
 
-#### Hasil
+#### Result
 
 ![uptime](https://github.com/user-attachments/assets/e7829c62-6d9b-4cc7-b652-0d71253cc863)
 
 #### cleanup_log.sh
 
-#### Cara Pengerjaan
+#### Procedure
 
-- Membuat file script yang berjalan setiap jam 00.00 untuk menghapus file log agregasi yang lebih lama dari 12 jam pertama
+- Create a script file that runs at 00.00 to delete aggregation log files older than the first 12 hours
 
-#### Kode
+#### Code
+
 ```sh
 #!/bin/bash
 
 find "$(pwd)/metrics" -name "metrics_agg_*.log" -mmin +720 -print -delete
 ```
 
-#### Hasil
+#### Result
 
 ![clean](https://github.com/user-attachments/assets/8a62bd8e-35e5-49fe-bb14-c631b136e511)
 
 #### crontab
 
-#### Cara Pengerjaan
+#### Procedure
+- minute5_log.sh runs every 5 minutes
+- agg_min5_to_hour.sh is run every hour
+- uptime_log.sh is run every hour
+- cleanup_log.sh runs at 00.00
 
-- minute5_log.sh dijalankan setiap 5 menit
-- agg_min5_to_hour.sh dijalankan setiap jam
-- uptime_log.sh dijalankan setiap jam
-- cleanup_log.sh dijalankan setiap jam 00.00
+#### Code
 
-#### Kode
 ```sh
 */5 * * * * /bin/bash /home/$USER/minute5_log.sh
 0 * * * * /bin/bash /home/$USER/agg_5min_to_hour.sh
