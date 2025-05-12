@@ -428,27 +428,18 @@ echo "Pengguna dengan Status Code 500 terbanyak adalah $winner dengan jumlah $ju
 
 #### Procedure:
 
-Meminta input username dan password
+1. Ask input username and password
+2. User's data will be saved in /home/$user/cloud_storage/users.txt if the user finished login with the username and password 
+3. Record the log in cloud_log.txt (success/failed) with the "isilog" function
+4. Reject username that already used by check every used username in users.txt
+5. Check if a user is still login. If there is, another user may not login until the currently active user logout
+6. Password Criteria
+   - Minimum 8 characters
+   - Contain at least 1 capital letter, 1 number, and 1 special character (example: @, #, $, etc.)
+   - Password may not the same as the username
+   - Password may not contain the word "cloud" or "storage"
 
-Kalau berhasil register,data pengguna disimpan di /home/$user/cloud_storage/users.txt kalau pengguna berhasil login dengan format username,password
-
-Mencatat log di cloud_log.txt (sukses/gagal) dengan fungsi isilog
-
-Menolak username yang sudah ada dengan cara mengecek username yang sudah ada di users.txt
-
-Mengecek apakah ada user yang sedang login, kalau ada, tidak boleh ada register baru sampai user logout
-
-Kriteria Password:
-
-Minimal 8 karakter
-
-Mengandung setidaknya satu huruf kapital, satu angka, dan satu karakter spesial (misalnya: @, #, $, dll.)
-
-Password tidak boleh sama dengan username
-
-Tidak boleh mengandung kata "cloud" atau "storage"
-
-#### Kode:
+#### Code:
 ```sh
 #!/bin/bash
 read -p "Username: " username
@@ -525,20 +516,13 @@ isilog "INFO User registered successfully"
 echo "Registered"
 ```
 
-
-
-
 login.sh:
 
-Memproses login dan logout pengguna
-
-Memeriksa apakah ada pengguna yang login dengan cara membandingkan waktu login terakhir di cloud_log.txt dengan waktu logout terakhir di cloud_log.txt
-
-Cek apakah username ada di users.txt, kalau ada, cek apakah password yang diinput sama dengan password di users.txt
-
-Mencatat log di cloud_log.txt dengan fungsi log
-
-Jika login berhasil, sistem menjalankan crontab
+- Process the user's login and logout 
+- Check if there is a user that still login by compare last login time with last logout time in cloud_log.txt
+- Check if the username exists in users.txt. If exist, check if the password is the same as the password in users.txt
+- Record log in cloud_log.txt with log function
+- If login success, system run the crontab
 
 Kode:
 ```sh
