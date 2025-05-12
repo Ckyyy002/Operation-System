@@ -23,7 +23,7 @@
 
 ### _(Module 1 Lab Work Report)_
 
-#### Task 1
+### Task 1
 
 ##### a. Code:
 ```sh
@@ -99,6 +99,7 @@ Conditional Branch:
      "The song [song title] is extremely popular with [jumlah] total streams."
 
 ##### c. Code:
+
 ```sh
 #!/bin/bash
 
@@ -124,19 +125,19 @@ echo "$album_info"
 
 ##### Procedure:
 1. Variable most_streamed
-- Filter songs where user column ($3) contains a digit.
-- Sort by stream count (descending) and select the top entry.
+    - Filter songs where user column ($3) contains a digit.
+    - Sort by stream count (descending) and select the top entry.
 
 2. Variable nama_lagu (song name)
-- Extract the song title by: {$1=""; print $0} → Remove the first column (stream count), then print the rest (song title).
+    - Extract the song title by: {$1=""; print $0} → Remove the first column (stream count), then print the rest (song title).
 
 3. Variable album_info
-- Retrieve album details for nama_lagu
-- Format: "Album_Name (Release_Year)".
+    - Retrieve album details for nama_lagu
+    - Format: "Album_Name (Release_Year)".
 
 4. Conditional Output
-- If jumlah < 24: "The song [nama_lagu] from the album [album_info] is less popular with [jumlah] total streams."  
-- Else: "The song [nama_lagu] from the album [album_info] is extremely popular with [jumlah] total streams."  
+    - If jumlah < 24: "The song [nama_lagu] from the album [album_info] is less popular with [jumlah] total streams."  
+    - Else: "The song [nama_lagu] from the album [album_info] is extremely popular with [jumlah] total streams."  
 
 ##### d. Code:
 ```sh
@@ -209,7 +210,7 @@ END {
 Mistakenly thought that the output displayed was only the “most” of each category. However, it turns out that it should also display information from each
 device.
 
-#### Task 2
+### Task 2
 
 ##### a. Procedure:
 1. Request IP
@@ -420,7 +421,7 @@ echo "Pengguna dengan Status Code 500 terbanyak adalah $winner dengan jumlah $ju
 ##### Result:
 ![image](https://github.com/user-attachments/assets/0f84d6da-929b-4edd-825a-cbcacff64f45)
 
-#### Task 3
+### Task 3
 
 ##### a. 
 
@@ -698,8 +699,7 @@ fi
 ##### Hasil:
 ![WhatsApp Image 2025-03-27 at 12 23 31](https://github.com/user-attachments/assets/9e67a09f-f719-43e9-86c7-3cc888eaf8f5)
 
-
-#### Task 4
+### Task 4
 
 #### minute5_log.sh
 
