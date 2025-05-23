@@ -1,10 +1,10 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/Eu-CByJh)
 |    NRP     |      Name      |
 | :--------: | :------------: |
-| 5025221000 | Student 1 Name |
-| 5025221000 | Student 2 Name |
+| 5025241138 | William Hans Chandra |
+| 5025241145 | Lyonel Oliver Dwiputra |
 | 5025241147 | Lucky Himawan Prasetya |
-| 5025221000 | Student 3 Name |
+| 5025241161 | Muh. Aqil Alqadri Syahid |
 
 # Praktikum Modul 3 _(Module 3 Lab Work)_
 
@@ -197,9 +197,9 @@ praktikan2:praktikan2
   ```bash
   root:$1$G/Q2ESqP$0bWAnagAHaUuEWlhwvQYl/:0:0:root:/root:/bin/sh 
   Budiman:$1$S4THyjtH$gTB8Ei2Z3JfXVWnoC4.FQ0:1001:100:Budiman:/home/Budiman:/bin/sh 
-  guest:$1$NARO6Ily$f/40p/3e2F.zuN4R0gTX40:1001:100:guest:/home/guest:/bin/sh 
-  praktikan1:$1$jACzsxt6$WoiURg3Fq1wPYO38FA8Nr0:1001:100:praktikan1:/home/praktikan1:/bin/sh
-  praktikan2:$1$ckT.unjX$tJiHF0Jxg0q3UchSWCuFI0:1001:100:praktikan2:/home/praktikan2:/bin/sh 
+  guest:$1$NARO6Ily$f/40p/3e2F.zuN4R0gTX40:1002:100:guest:/home/guest:/bin/sh 
+  praktikan1:$1$jACzsxt6$WoiURg3Fq1wPYO38FA8Nr0:1003:100:praktikan1:/home/praktikan1:/bin/sh
+  praktikan2:$1$ckT.unjX$tJiHF0Jxg0q3UchSWCuFI0:1004:100:praktikan2:/home/praktikan2:/bin/sh 
   ```
 
   `group`:
@@ -235,12 +235,19 @@ praktikan2:praktikan2
 
 - **Code:**
 
-  `put your answer here`
+  ```
+  cd osboot/myramdisk
+  chown root:root root
+  chmod 700 root
+  ```
 
 - **Explanation:**
 
-  `put your answer here`
-
+1. Masuk ke direktori osboot/myramdisk
+2. Gunakan command 'chown' untuk mengatur kepemilikan/akses ke direktori tertentu
+3. chown root:root root -> mengubah kepemilikan direktori root hanya bisa diakses oleh root
+4. chmod 700 root -> memberikan hak (rwx) hanya ke pemilik direktori 
+ 
 - **Screenshot:**
 
   `put your answer here`
@@ -255,15 +262,27 @@ praktikan2:praktikan2
 
 - **Code:**
 
-  `put your answer here`
+  ```
+  cd osboot/myramdisk/home
+  chown -R 1001:100 Budiman
+  chmod 700 Budiman
+  chown -R 1002:100 guest
+  chmod 700 guest
+  chown -R 1003:100 praktikan1
+  chmod 700 praktikan1
+  chown -R 1004:100 praktikan2
+  chmod 700 praktikan2
+  ```
 
 - **Explanation:**
 
-  `put your answer here`
+  '''
+  Masuk ke direktori osboot/myramdisk/home, kemudian ubah kepemilikan/akses setiap direktori    sesuai dengan namanya masing-masing. chown -R artinya mengganti kepemilikan secara rekursif (file-file didalam kepemilikannya juga berubah dan bukan cuman direktori nya saja yang berubah). 1001, 1002, 1003, 1004 merupakan PID unik untuk setiap user yang ada pada file passwd di direktori etc. Lalu chmod 700 "user" untuk memberikan hak (rwx) kepada pemilik direktori only.
+  '''
 
 - **Screenshot:**
 
-  `put your answer here`
+  ` `
 
 ### Soal 6
 
@@ -275,11 +294,22 @@ praktikan2:praktikan2
 
 - **Code:**
 
-  `put your answer here`
+  ```
+  cd osboot/myramdisk/etc
+  nano motd
+```
+ __      __   _                    _          ___  ___ _ ___ ___ 
+ \ \    / /__| |__ ___ _ __  ___  | |_ ___   / _ \/ __( )_  ) __|
+  \ \/\/ / -_) / _/ _ \ '  \/ -_) |  _/ _ \ | (_) \__ \/ / /|__ \
+   \_/\_/\___|_\__\___/_|_|_\___|  \__\___/  \___/|___/ /___|___/
+
+  ```
 
 - **Explanation:**
 
-  `put your answer here`
+  ```
+  cd osboot/myramdisk/etc untuk pindah ke direktori osboot/myramdisk/etc kemudian nano motd membuat motd yang diisi dengan welcome banner dengan tulisan `"Welcome to OS'25"` dalam bentuk ASCII Art
+  ```
 
 - **Screenshot:**
 
@@ -295,11 +325,19 @@ praktikan2:praktikan2
 
 - **Code:**
 
-  `put your answer here`
+  ```
+   cd osboot/myramdisk/etc
+   nano profile
+  
+   echo "Helloo $USER"
+
+  ```
 
 - **Explanation:**
 
-  `put your answer here`
+  ```
+  masuk direktori osboot/myramdisk/etc, kemudian buat dan isi profile dengan echo "Helloo $USER"
+  ```
 
 - **Screenshot:**
 
@@ -315,11 +353,76 @@ praktikan2:praktikan2
 
 - **Code:**
 
-  `put your answer here`
+```
+cd osboot/myramdisk/etc
+nano profile
+
+#!/bin/sh
+
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+RESET='\033[0m'
+
+printf "\nHelloo ${GREEN}%s${RESET}\n\n" "$(whoami)"
+
+export PS1="${GREEN}\u@\h${RESET}:${BLUE}\w${RESET}\$ "
+
+alias ls='ls --color=auto'
+export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=37;41:sg=30;43:tw=30;42:ow=34;42'
+
+  ```
 
 - **Explanation:**
 
-  `put your answer here`
+  ```
+masuk direktori osboot/myramdisk/etc, kemudian mengubah isi profile dengan
+  ```
+
+#!/bin/sh
+
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+RESET='\033[0m'
+```
+Ini variabel yang menyimpan kode warna ANSI untuk terminal.
+GREEN = warna hijau,
+BLUE = warna biru,
+RESET = reset warna ke default.
+Digunakan untuk memberi warna pada teks yang ditampilkan di terminal.
+
+
+```
+printf "\nHelloo ${GREEN}%s${RESET}\n\n" "$(whoami)"
+```
+Ini mencetak pesan ke terminal: Helloo [nama user].
+${GREEN} membuat nama user berwarna hijau.
+$(whoami) menjalankan perintah whoami yang outputnya nama user yang sedang login.
+printf bisa format warna dan format string.
+
+
+```
+export PS1="${GREEN}\u@\h${RESET}:${BLUE}\w${RESET}\$ "
+```
+PS1 adalah prompt string 1. Teks yang muncul sebagai prompt terminal
+Variabel ini mengatur warna prompt:
+${GREEN}\u@\h${RESET}, username dan hostname berwarna hijau,
+:${BLUE}\w${RESET} → tanda ":" dan path direktori kerja saat ini berwarna biru,
+\$ → karakter $ (untuk user biasa) atau # (untuk root) tanpa warna.
+
+
+```
+alias ls='ls --color=auto'
+```
+Membuat alias untuk perintah ls agar otomatis menggunakan opsi --color=auto.
+Jadi saat mengetik ls, hasil listing file dan folder akan berwarna sesuai tipe file
+
+
+```
+export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=37;41:sg=30;43:tw=30;42:ow=34;42'
+```
+LS_COLORS adalah variabel environment yang mengatur warna spesifik untuk tipe file saat ls --color dijalankan.
+
+
 
 - **Screenshot:**
 
@@ -335,7 +438,13 @@ praktikan2:praktikan2
 
 - **Code:**
 
-  `put your answer here`
+```
+cd home
+git clone https://github.com/morisab/budiman-text-editor.git
+cd osboot
+g++ -static ../budiman-text-editor/main.cpp -o myramdisk/bin/budiman
+
+```
 
 - **Explanation:**
 
@@ -355,7 +464,30 @@ praktikan2:praktikan2
 
 - **Code:**
 
-  `put your answer here`
+```
+cd osboot
+mkdir -p mylinuxiso/boot/grub
+cp bzImage mylinuxiso/boot
+cp myramdisk.gz mylinuxiso/boot
+nano mylinuxiso/boot/grub grub.cfg
+```
+
+Lalu isi file dengan
+```
+set timeout=5
+set default=0
+
+menuentry "MyLinux" {
+  linux /boot/bzImage
+  initrd /boot/myramdisk.gz
+}
+```
+
+Lanjutkan dengan menjalankan command ini di direktori osboot
+```
+grub-mkrescue -o mylinux.iso mylinuxiso
+```
+
 
 - **Explanation:**
 
