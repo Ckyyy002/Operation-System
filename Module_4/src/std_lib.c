@@ -57,35 +57,17 @@ void strcpy(char* src, char* dst) {
     dst[i] = '\0';
 }
 
-char* strstr(char* haystack, char* needle) {
-    if (!*needle) return haystack;
-    for (; *haystack; haystack++) {
-        char *h = haystack, *n = needle;
+char* strstr(char* str, char* find) {
+    if (!*find) return str;
+    for (; *str; str++) {
+        char *h = str, *n = find;
         while (*h && *n && (*h == *n)) {
             h++;
             n++;
         }
-        if (!*n) return haystack;
+        if (!*n) return str;
     }
-    return 0;  // Not found
-}
-
-void strcat(char* dest, char* src) {
-    unsigned int dest_len = strlen(dest);
-    unsigned int i;
-    for (i = 0; src[i] != '\0'; i++) {
-        dest[dest_len + i] = src[i];
-    }
-    dest[dest_len + i] = '\0';
-}
-
-int atoi(char* str) {
-    int res = 0;
-    int i;
-    for (i = 0; str[i] != '\0'; ++i) {
-        res = res * 10 + str[i] - '0';
-    }
-    return res;
+    return 0;
 }
 
 void itoa(int num, char* str) {
