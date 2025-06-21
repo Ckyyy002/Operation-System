@@ -16,12 +16,12 @@ int main() {
     int i;
 
     clearScreen();
-    printString("LilHabOS - C12\n");
+    printString("LilHabOS - C12\n\r");
 
     while (1) {
         printString("$> ");
         readString(buf);
-        printString("\n");
+        printString("\r");
 
         if (strlen(buf) > 0) {
             if (strstr(buf, "|") != 0) {
@@ -85,10 +85,10 @@ void handlePipeCommands(char* command) {
             while (*grepArg == ' ') grepArg++;
             if (grepPattern(pipeBuffer, grepArg)) {
                 printString(grepArg);
-                printString("\n");
+                printString("\n\r");
             } 
             else {
-                printString("NULL\n");
+                printString("NULL\n\r");
             }
         }
     }
@@ -105,7 +105,7 @@ void wordCount(char* text) {
     int i;
 
     if (strlen(text) == 0) {
-        printString("0 0 0\n");
+        printString("0 0 0\n\r");
         return;
     }
 
@@ -136,7 +136,7 @@ void wordCount(char* text) {
     printNumber(words);
     printString(" ");
     printNumber(chars);
-    printString("\n");
+    printString("\n\r");
 }
 
 void printNumber(int num) {
@@ -175,7 +175,7 @@ void executeCommand(char* command) {
 
     if (strcmp(cmd_name, "echo")) {
         printString(args);
-        printString("\n");
+        printString("\n\r");
     }
 }
 
@@ -195,6 +195,7 @@ void readString(char* buf) {
         if (ch == '\r' || ch == '\n') {
             buf[index] = '\0';
             printChar('\n');
+            printChar('\r');
             return;
         } 
         else if (ch == '\b') {
