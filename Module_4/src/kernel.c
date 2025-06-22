@@ -21,7 +21,7 @@ int main() {
     while (1) {
         printString("$> ");
         readString(buf);
-	printString("\r");
+        printString("\r");
 
         if (strlen(buf) > 0) {
             if (strstr(buf, "|") != 0) {
@@ -36,13 +36,24 @@ int main() {
 void handlePipeCommands(char* command) {
     char cmd1[64];
     char cmd2[64];
-    char pipeBuffer[128];
+    char cmd3[64];
+    char pipeBuffer1[128];
+    char pipeBuffer2[128];
     int i = 0;
     int j;
+    int pipeCount = 0;
+    char* ptr = command;
+
+    while (*ptr) {
+        if (*ptr == '|') pipeCount++;
+        ptr++;
+    }
 
     for (i = 0; i < 128; i++) {
-        pipeBuffer[i] = 0;
+        pipeBuffer1[i] = 0;
+        pipeBuffer2[i] = 0;
     }
+    
     i = 0;
 
     while (command[i] != '|' && command[i] != '\0') {
@@ -54,11 +65,11 @@ void handlePipeCommands(char* command) {
     if (command[i] == '|') {
         i++;
         while (command[i] == ' ') {
-            i++;
-        }
-
+	    i++;
+	}
+        
         j = 0;
-        while (command[i] != '\0') {
+        while (command[i] != '|' && command[i] != '\0') {
             cmd2[j++] = command[i++];
         }
         cmd2[j] = '\0';
@@ -67,33 +78,74 @@ void handlePipeCommands(char* command) {
         cmd2[0] = '\0';
     }
 
+    if (command[i] == '|') {
+        i++;
+        while (command[i] == ' ') {
+	    i++;
+	}
+        
+        j = 0;
+        while (command[i] != '\0') {
+            cmd3[j++] = command[i++];
+        }
+        cmd3[j] = '\0';
+    } 
+    else {
+        cmd3[0] = '\0';
+    }
+
     if (strstr(cmd1, "echo") != 0) {
         char* echoArg = strstr(cmd1, "echo");
         if (echoArg != 0) {
             echoArg += 4;
             while (*echoArg == ' ') {
-                echoArg++;
-            }
-            strcpy(echoArg, pipeBuffer);
+		echoArg++;
+	    }
+            strcpy(echoArg, pipeBuffer1);
         }
     }
 
-    if (strstr(cmd2, "grep") != 0) {
-        char* grepArg = strstr(cmd2, "grep");
-        if (grepArg != 0) {
-            grepArg += 4;
-            while (*grepArg == ' ') grepArg++;
-            if (grepPattern(pipeBuffer, grepArg)) {
-                printString(grepArg);
-                printString("\n\r");
-            } 
-            else {
-                printString("NULL\n\r");
+    if (pipeCount == 1) {
+        if (strstr(cmd2, "grep") != 0) {
+            char* grepArg = strstr(cmd2, "grep");
+            if (grepArg != 0) {
+                grepArg += 4;
+                while (*grepArg == ' ') {
+		    grepArg++;
+		}
+                if (grepPattern(pipeBuffer1, grepArg)) {
+                    printString(grepArg);
+                    printString("\n\r");
+                } 
+		else {
+                    printString("NULL\n\r");
+                }
             }
         }
+        else if (strstr(cmd2, "wc") != 0) {
+            wordCount(pipeBuffer1);
+        }
     }
-    else if (strstr(cmd2, "wc") != 0) {
-        wordCount(pipeBuffer);
+    else if (pipeCount == 2) {
+        if (strstr(cmd2, "grep") != 0) {
+            char* grepArg = strstr(cmd2, "grep");
+            if (grepArg != 0) {
+                grepArg += 4;
+                while (*grepArg == ' ') {
+		    grepArg++;
+		}
+                if (grepPattern(pipeBuffer1, grepArg)) {
+                    strcpy(grepArg, pipeBuffer2);
+                } 
+		else {
+                    pipeBuffer2[0] = '\0';
+                }
+            }
+        }
+
+        if (strstr(cmd3, "wc") != 0) {
+            wordCount(pipeBuffer2);
+        }
     }
 }
 
@@ -110,7 +162,9 @@ void wordCount(char* text) {
     }
 
     for (i = 0; text[i] != '\0'; i++) {
-        chars++;
+	if (text[i] != ' ') {
+            chars++;
+	}
         
         if (text[i] == '\n') {
             lines++;
