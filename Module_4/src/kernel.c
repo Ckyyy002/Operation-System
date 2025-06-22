@@ -34,61 +34,52 @@ int main() {
 }
 
 void handlePipeCommands(char* command) {
-    char cmd1[64];
-    char cmd2[64];
-    char pipeBuffer[128];
+    char commands[3][64];
+    int cmd_count = 0;
     int i = 0;
-    int j;
+    int j = 0;
 
-    for (i = 0; i < 128; i++) {
-        pipeBuffer[i] = 0;
+    for (int k = 0; k < 3; k++) {
+        memset(commands[k], 0, 64);
     }
-    i = 0;
 
-    while (command[i] != '|' && command[i] != '\0') {
-        cmd1[i] = command[i];
-        i++;
-    }
-    cmd1[i] = '\0';
-
-    if (command[i] == '|') {
-        i++;
-        while (command[i] == ' ') {
+    while (command[i] != '\0' && cmd_count < 3) {
+        if (command[i] == '|') {
+            commands[cmd_count][j] = '\0';
+            cmd_count++;
+            j = 0;
             i++;
+            // Skip spaces after pipe
+            while (command[i] == ' ') i++;
+        } else {
+            commands[cmd_count][j++] = command[i++];
         }
-
-        j = 0;
-        while (command[i] != '\0') {
-            cmd2[j++] = command[i++];
-        }
-        cmd2[j] = '\0';
-    } 
-    else {
-        cmd2[0] = '\0';
     }
-
-    if (strstr(cmd1, "echo") != 0) {
-        char* echoArg = strstr(cmd1, "echo");
+    commands[cmd_count][j] = '\0';
+    cmd_count++;
+    char pipeBuffer[128] = {0};
+    
+    if (strstr(commands[0], "echo") != 0) {
+        char* echoArg = strstr(commands[0], "echo");
         if (echoArg != 0) {
             echoArg += 4;
-            while (*echoArg == ' ') {
-                echoArg++;
-            }
+            while (*echoArg == ' ') echoArg++;
             strcpy(pipeBuffer, echoArg);
         }
     }
 
-    if (strstr(cmd2, "grep") != 0) {
-        char* grepArg = strstr(cmd2, "grep");
+    if (cmd_count > 1 && strstr(commands[1], "grep") != 0) {
+        char* grepArg = strstr(commands[1], "grep");
         if (grepArg != 0) {
             grepArg += 4;
             while (*grepArg == ' ') grepArg++;
             if (!grepPattern(pipeBuffer, grepArg)) {
-                pipeBuffer[0] = '\0'; 
+                pipeBuffer[0] = '\0';
             }
         }
     }
-    else if (strstr(cmd2, "wc") != 0) {
+
+    if (cmd_count > 2 && strstr(commands[2], "wc") != 0) {
         wordCount(pipeBuffer);
     }
 }
