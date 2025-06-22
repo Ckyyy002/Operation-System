@@ -74,7 +74,7 @@ void handlePipeCommands(char* command) {
             while (*echoArg == ' ') {
                 echoArg++;
             }
-            strcpy(echoArg, pipeBuffer);
+            strcpy(pipeBuffer, echoArg);
         }
     }
 
@@ -83,12 +83,8 @@ void handlePipeCommands(char* command) {
         if (grepArg != 0) {
             grepArg += 4;
             while (*grepArg == ' ') grepArg++;
-            if (grepPattern(pipeBuffer, grepArg)) {
-                printString(grepArg);
-                printString("\n\r");
-            } 
-            else {
-                printString("NULL\n\r");
+            if (!grepPattern(pipeBuffer, grepArg)) {
+                pipeBuffer[0] = '\0'; 
             }
         }
     }
