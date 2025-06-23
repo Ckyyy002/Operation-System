@@ -266,10 +266,9 @@ void itoa(int num, char* str) {
 void executeCommand(char* command) {
     char cmd_name[32];
     char args[96];
-    int i;
+    int i = 0;
     int j;
 
-    i = 0;
     while (command[i] != ' ' && command[i] != '\0') {
         cmd_name[i] = command[i];
         i++;
@@ -283,17 +282,17 @@ void executeCommand(char* command) {
             args[j++] = command[i++];
         }
         args[j] = '\0';
-    } else {
+    } 
+    else {
         args[0] = '\0';
     }
 
-    if (strcmp(cmd_name, "echo") == 0) {\
-        if (strlen(args) > 0) {
-            printString(args);
-        }
+    if (strcmp(cmd_name, "echo")) {
+        printString(args);
         printString("\n\r");
     }
 }
+
 ```
 
 #### d. Implementasikan perintah `grep`
@@ -302,8 +301,9 @@ void executeCommand(char* command) {
 
   Contoh penggunaan:
 
-  ```bash
-  $> echo <argument> | grep <argument>
+```bash
+$> echo <argument> | grep <argument>
+```
 
 #### Cara Pengerjaan
 
@@ -316,36 +316,107 @@ void executeCommand(char* command) {
 #### Kode
 ```c
 int grepPattern(char* text, char* pattern) {
-    if (text == 0 || pattern == 0) return 0;
-    
-    char* found = strstr(text, pattern);
-    return (found != 0);
-}
-
-void handleGrepCommand(char* text, char* pattern) {
-    if (grepPattern(text, pattern)) {
-        printString(text);
-        printString("\n\r");
-    } else {
-        printString("NULL\n\r");
-    }
+    return strstr(text, pattern) != 0;
 }
 
 void handlePipeCommands(char* command) {
     char cmd1[64];
     char cmd2[64];
-    char pipeBuffer[128];
+    char cmd3[64];
+    char pipeBuffer1[128];
+    char pipeBuffer2[128];
+    int i = 0;
+    int j;
+    int pipeCount = 0;
+    char* ptr = command;
 
-    for(int i = 0; i < 128; i++) {
-        pipebuffer[i] = 0;
+    while (*ptr) {
+        if (*ptr == '|') pipeCount++;
+        ptr++;
     }
 
-    if (strstr(cmd2, "grep") != 0) {
-        char* grepArg = cmd2 + 4;
-        while (*grepArg == ' ') grepArg++;
-        handleGrepCommand(pipeBuffer, grepArg);
+    for (i = 0; i < 128; i++) {
+        pipeBuffer1[i] = 0;
+        pipeBuffer2[i] = 0;
+    }
+    
+    i = 0;
+
+    while (command[i] != '|' && command[i] != '\0') {
+        cmd1[i] = command[i];
+        i++;
+    }
+    cmd1[i] = '\0';
+
+    if (command[i] == '|') {
+        i++;
+        while (command[i] == ' ') {
+	    i++;
+	}
+        
+        j = 0;
+        while (command[i] != '|' && command[i] != '\0') {
+            cmd2[j++] = command[i++];
+        }
+        cmd2[j] = '\0';
+    } 
+    else {
+        cmd2[0] = '\0';
+    }
+
+    if (command[i] == '|') {
+        i++;
+        while (command[i] == ' ') {
+	    i++;
+	}
+        
+        j = 0;
+        while (command[i] != '\0') {
+            cmd3[j++] = command[i++];
+        }
+        cmd3[j] = '\0';
+    } 
+    else {
+        cmd3[0] = '\0';
+    }
+
+    if (pipeCount == 1) {
+        if (strstr(cmd2, "grep") != 0) {
+            char* grepArg = strstr(cmd2, "grep");
+            if (grepArg != 0) {
+                grepArg += 4;
+                while (*grepArg == ' ') {
+		    grepArg++;
+		}
+                if (grepPattern(pipeBuffer1, grepArg)) {
+                    printString(grepArg);
+                    printString("\n\r");
+                } 
+		else {
+                    printString("NULL\n\r");
+                }
+            }
+        }
+    }
+    else if (pipeCount == 2) {
+        if (strstr(cmd2, "grep") != 0) {
+            char* grepArg = strstr(cmd2, "grep");
+            if (grepArg != 0) {
+                grepArg += 4;
+                while (*grepArg == ' ') {
+		    grepArg++;
+		}
+                if (grepPattern(pipeBuffer1, grepArg)) {
+                    strcpy(grepArg, pipeBuffer2);
+                } 
+		else {
+                    pipeBuffer2[0] = '\0';
+                }
+            }
+        }
     }
 }
+
 ```
 
 #### e. Implementasikan perintah `wc`
@@ -357,6 +428,7 @@ void handlePipeCommands(char* command) {
   ```bash
   $> echo <argument> | wc
   $> echo <argument> | grep <argument> | wc
+  ```
 
 #### Cara Pengerjaan
 
@@ -371,20 +443,91 @@ void handlePipeCommands(char* command) {
 
 #### Kode
 ```c
+void handlePipeCommands(char* command) {
+    char cmd1[64];
+    char cmd2[64];
+    char cmd3[64];
+    char pipeBuffer1[128];
+    char pipeBuffer2[128];
+    int i = 0;
+    int j;
+    int pipeCount = 0;
+    char* ptr = command;
+
+    while (*ptr) {
+        if (*ptr == '|') pipeCount++;
+        ptr++;
+    }
+
+    for (i = 0; i < 128; i++) {
+        pipeBuffer1[i] = 0;
+        pipeBuffer2[i] = 0;
+    }
+    
+    i = 0;
+
+    while (command[i] != '|' && command[i] != '\0') {
+        cmd1[i] = command[i];
+        i++;
+    }
+    cmd1[i] = '\0';
+
+    if (command[i] == '|') {
+        i++;
+        while (command[i] == ' ') {
+	    i++;
+	}
+        
+        j = 0;
+        while (command[i] != '|' && command[i] != '\0') {
+            cmd2[j++] = command[i++];
+        }
+        cmd2[j] = '\0';
+    } 
+    else {
+        cmd2[0] = '\0';
+    }
+
+    if (command[i] == '|') {
+        i++;
+        while (command[i] == ' ') {
+	    i++;
+	}
+        
+        j = 0;
+        while (command[i] != '\0') {
+            cmd3[j++] = command[i++];
+        }
+        cmd3[j] = '\0';
+    } 
+    else {
+        cmd3[0] = '\0';
+    }
+
+     if (strstr(cmd2, "wc") != 0) {
+         wordCount(pipeBuffer1);
+     }
+     if (strstr(cmd3, "wc") != 0) {
+         wordCount(pipeBuffer2);
+     }
+}
+
 void wordCount(char* text) {
-    int lines = 0;
+    int lines = 1;
     int words = 0;
     int chars = 0;
     int inWord = 0;
-    int i = 0;
+    int i;
 
-    if (text == 0 || strlen(text) == 0) {
+    if (strlen(text) == 0) {
         printString("0 0 0\n\r");
         return;
     }
 
-    while (text[i] != '\0') {
-        chars++;
+    for (i = 0; text[i] != '\0'; i++) {
+	if (text[i] != ' ') {
+            chars++;
+	}
         
         if (text[i] == '\n') {
             lines++;
@@ -395,18 +538,14 @@ void wordCount(char* text) {
                 words++;
                 inWord = 0;
             }
-        } else {
+        } 
+        else {
             inWord = 1;
         }
-        i++;
     }
     
     if (inWord) {
         words++;
-    }
-    
-    if (lines == 0 && chars > 0) {
-        lines = 1;
     }
     
     printNumber(lines);
@@ -416,6 +555,8 @@ void wordCount(char* text) {
     printNumber(chars);
     printString("\n\r");
 }
+
+
 ```
 
 #### f. Buat otomatisasi untuk mengompilasi dengan melengkapi file [`makefile`](./makefile).
