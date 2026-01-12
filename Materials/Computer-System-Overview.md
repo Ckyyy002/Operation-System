@@ -171,5 +171,6 @@ Bagaimana processor bertukar data dengan keyboard, disk, atau layar? Ada 3 metod
 * Processor hanya diberi tahu saat **semua** data selesai dipindah.
 
 ---
-*Materi dirangkum untuk portofolio pembelajaran Sistem Operasi.*
+
+*Materi dirangkum untuk pembelajaran Sistem Operasi.*
 
