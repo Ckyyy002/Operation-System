@@ -130,8 +130,6 @@ Memori dalam komputer disusun bertingkat berdasarkan prinsip:
 * Semakin **cepat** → Semakin **mahal** → Kapasitas semakin **kecil**.
 * Semakin **besar** → Semakin **lambat** → Harga semakin **murah**.
 
-[attachment_0](attachment)
-
 **Urutan Hirarki:**
 1.  **Register** (Paling Cepat, ada di dalam Processor)
 2.  **Cache** (Sangat Cepat)
