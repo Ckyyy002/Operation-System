@@ -44,6 +44,7 @@ Dalam hierarki sistem komputer, OS berada di antara perangkat keras (hardware) d
 [ Operating System ]  <-- (Designer View)
       ⬇
 [ Computer Hardware ]
+```
 
 ### Layanan yang Disediakan OS
 Sistem operasi menyediakan layanan bagi programmer, pengguna, dan efisiensi sistem itu sendiri:
